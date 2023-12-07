@@ -1,0 +1,18 @@
+body {
+    margin: 0;
+}
+
+html,
+body,
+#app {
+    height: 100%;
+}
+
+.hljs {
+    font-family: Consolas, monospace !important;
+}
+
+pre code.hljs.hljs {
+    background: none;
+    overflow-x: visible;
+}
