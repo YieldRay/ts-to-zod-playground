@@ -24,9 +24,8 @@ const mountEditor = (target: HTMLElement) => {
     //@ts-ignore
     window.editor = newEditor
 
-    // 监听文本内容变化事件
-    newEditor.onDidChangeModelContent(
-        () => props.onChange?.(newEditor.getValue()),
+    newEditor.onDidChangeModelContent(() =>
+        props.onChange?.(newEditor.getValue())
     )
 
     return newEditor

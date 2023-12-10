@@ -27,7 +27,7 @@ self.MonacoEnvironment = {
 
 monaco.languages.typescript.typescriptDefaults.setEagerModelSync(true)
 
-// 关闭错误
+// disable diagnostics
 monaco.languages.typescript.typescriptDefaults.setDiagnosticsOptions({
     noSemanticValidation: true,
     noSyntaxValidation: true, // This line disables errors in jsx tags like <div>, etc.

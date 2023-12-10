@@ -19,14 +19,22 @@
                 :value="initialValue"
                 class="editor"
                 @change="onChange"
-            ></MonacoEditor>
+                :style="{ width: editorWidth + 'px' }"
+            />
+            <div
+                class="resizer"
+                @pointerdown="onPointerDown"
+                @pointermove="onPointerMove"
+                @pointerup="onPointerUp"
+                @pointercancel="onPointerUp"
+            ></div>
             <highlightjs class="output" language="javascript" :code="output" />
         </div>
     </main>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import MonacoEditor from '@/components/MonacoEditor.vue'
 import { ts2zod } from '@/utils/ts2zod'
 import { debounce } from '@/utils/debounce'
@@ -59,6 +67,34 @@ const onSave = () => {
 const onCopy = () => {
     copy(output.value)
     alert('success!')
+}
+
+// this allow resize the pane
+const editorWidth = ref(
+    Number(localStorage.getItem('editorWidth')) ||
+        (document.documentElement.clientWidth / 3) * 2,
+)
+
+let isPointerDown = false
+let initialWidth = editorWidth.value
+let pointerDownX = 0
+
+const onPointerDown = (e: PointerEvent) => {
+    ;(e.target as HTMLDivElement).setPointerCapture(e.pointerId)
+    isPointerDown = true
+    pointerDownX = e.clientX
+    initialWidth = editorWidth.value
+}
+const onPointerUp = (e: PointerEvent) => {
+    ;(e.target as HTMLDivElement).releasePointerCapture(e.pointerId)
+    isPointerDown = false
+}
+const onPointerMove = (e: PointerEvent) => {
+    if (!isPointerDown) return
+    const distanceX = e.clientX - pointerDownX
+    const w = Math.max(initialWidth + distanceX, 5)
+    editorWidth.value = w
+    localStorage.setItem('editorWidth', w.toString())
 }
 </script>
 
@@ -104,11 +140,25 @@ button:active {
 }
 
 .editor {
-    width: 66.6vw;
+    flex: 0 1 auto;
+}
+
+.resizer {
+    flex: 0 0 1px;
+    height: 100%;
+    border-left: solid 2px #fff;
+    border-right: solid 2px #fff;
+    background: #eee;
+    cursor: col-resize;
+}
+
+.resizer:hover {
+    border-left: solid 2px #eee;
+    border-right: solid 2px #eee;
 }
 
 .output {
-    width: 33.3vw;
+    flex: 1 1;
     height: 100%;
     font-size: 14px;
     overflow: scroll;
