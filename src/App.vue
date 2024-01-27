@@ -3,10 +3,20 @@
         <nav class="nav">
             <h2>
                 <a
-                    href="https://github.com/fabien0102/ts-to-zod"
+                    href="https://github.com/YieldRay/ts-to-zod-playground"
                     target="_blank"
                 >
-                    ts-to-zod-playground
+                    <span>ts-to-zod-playground</span
+                    ><small>@{{ headHash }}</small>
+                </a>
+                <a
+                    :href="`https://www.npmjs.com/package/ts-to-zod/v/${tsToZodVersion}`"
+                    target="_blank"
+                    style="padding-left: 0.5rem"
+                >
+                    <small class="version"
+                        >ts-to-zod v{{ tsToZodVersion }}</small
+                    >
                 </a>
             </h2>
             <div>
@@ -34,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import MonacoEditor from '@/components/MonacoEditor.vue'
 import { ts2zod } from '@/utils/ts2zod'
 import { debounce } from '@/utils/debounce'
@@ -42,8 +52,11 @@ import { copy } from '@/utils/copy'
 import { saveAsTextFile } from '@/utils/saveFile'
 import { exampleCode } from './exampleCode'
 
-const initialValue = localStorage.getItem('monaco-editor-value') ?? exampleCode
+// versions const
+const headHash = ref(__HEAD__.slice(0, 5))
+const tsToZodVersion = ref(__ts_to_zod_version__)
 
+const initialValue = localStorage.getItem('monaco-editor-value') ?? exampleCode
 const output = ref('')
 
 onMounted(() => {
@@ -109,6 +122,14 @@ main {
 a {
     text-decoration: none;
     color: inherit;
+}
+
+.version {
+    font-size: small;
+    color: #666;
+    background: #dfdfdf;
+    border-radius: 0.5rem;
+    padding: 0.1rem 0.4rem;
 }
 
 .nav {

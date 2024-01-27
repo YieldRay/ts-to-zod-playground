@@ -9,3 +9,8 @@ import hljsVuePlugin from '@highlightjs/vue-plugin'
 hljs.registerLanguage('typescript', typescript)
 
 createApp(App).use(hljsVuePlugin).mount('#app')
+
+declare global {
+    const __ts_to_zod_version__: string
+    const __HEAD__: string
+}
